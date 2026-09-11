@@ -100,8 +100,11 @@ import numpy as np
 def slice_subblock(arr, r0, r1, c0, c1):
     return arr[r0:r1, c0:c1]
 
-# Step 17 - elementwise_add (not yet solved)
-# TODO: implement
+# Step 17 - elementwise_add
+import numpy as np
+
+def elementwise_add(a, b):
+    return a + b
 
 # Step 18 - elementwise_multiply (not yet solved)
 # TODO: implement
