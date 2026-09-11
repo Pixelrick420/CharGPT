@@ -136,8 +136,11 @@ import numpy as np
 def array_log(arr):
     return np.log(arr)
 
-# Step 23 - sum_all (not yet solved)
-# TODO: implement
+# Step 23 - sum_all
+import numpy as np
+
+def sum_all(arr):
+    return np.sum(arr)
 
 # Step 24 - sum_axis0 (not yet solved)
 # TODO: implement
