@@ -88,8 +88,11 @@ import numpy as np
 def slice_row(arr, i):
     return arr[i]
 
-# Step 15 - slice_column (not yet solved)
-# TODO: implement
+# Step 15 - slice_column
+import numpy as np
+
+def slice_column(arr, j):
+    return arr[:,j]
 
 # Step 16 - slice_subblock (not yet solved)
 # TODO: implement
