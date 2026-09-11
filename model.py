@@ -118,8 +118,11 @@ import numpy as np
 def scalar_broadcast_add(arr, scalar):
     return arr + scalar
 
-# Step 20 - vector_matrix_broadcast_add (not yet solved)
-# TODO: implement
+# Step 20 - vector_matrix_broadcast_add
+import numpy as np
+
+def vector_matrix_broadcast_add(matrix, vector):
+    return matrix + vector
 
 # Step 21 - array_exp (not yet solved)
 # TODO: implement
