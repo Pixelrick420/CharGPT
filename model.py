@@ -124,8 +124,11 @@ import numpy as np
 def vector_matrix_broadcast_add(matrix, vector):
     return matrix + vector
 
-# Step 21 - array_exp (not yet solved)
-# TODO: implement
+# Step 21 - array_exp
+import numpy as np
+
+def array_exp(arr):
+    return np.exp(arr)
 
 # Step 22 - array_log (not yet solved)
 # TODO: implement
