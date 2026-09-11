@@ -112,8 +112,11 @@ import numpy as np
 def elementwise_multiply(a, b):
     return a * b
 
-# Step 19 - scalar_broadcast_add (not yet solved)
-# TODO: implement
+# Step 19 - scalar_broadcast_add
+import numpy as np
+
+def scalar_broadcast_add(arr, scalar):
+    return arr + scalar
 
 # Step 20 - vector_matrix_broadcast_add (not yet solved)
 # TODO: implement
