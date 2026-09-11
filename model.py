@@ -82,8 +82,11 @@ def make_2d_random(rows, cols, seed):
 def index_element(arr, i, j):
     return arr[i][j]
 
-# Step 14 - slice_row (not yet solved)
-# TODO: implement
+# Step 14 - slice_row
+import numpy as np
+
+def slice_row(arr, i):
+    return arr[i]
 
 # Step 15 - slice_column (not yet solved)
 # TODO: implement
