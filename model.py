@@ -340,8 +340,9 @@ def generate_sequence(p_matrix, start_id, length, rng):
 def decode_generated_sequence(ids, itos):
     return ''.join([itos[token_id] for token_id in ids])
 
-# Step 54 - log_prob_of_pair (not yet solved)
-# TODO: implement
+# Step 54 - log_prob_of_pair
+def log_prob_of_pair(p_matrix, current_id, next_id):
+    return np.log(p_matrix[current_id][next_id])
 
 # Step 55 - sum_negative_log_probs (not yet solved)
 # TODO: implement
