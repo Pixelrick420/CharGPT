@@ -295,8 +295,13 @@ def loop_fill_counts(n_matrix, data):
     
     return n_matrix
 
-# Step 47 - vectorize_counts_add_at (not yet solved)
-# TODO: implement
+# Step 47 - vectorize_counts_add_at
+import numpy as np
+
+def vectorize_counts_add_at(vocab_size, data):
+    count_matrix = allocate_count_matrix(vocab_size)
+    np.add.at(count_matrix, (data[:-1], data[1:]), 1)
+    return count_matrix
 
 # Step 48 - add_one_smoothing (not yet solved)
 # TODO: implement
