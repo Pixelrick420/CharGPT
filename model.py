@@ -271,8 +271,13 @@ def stack_y_batch(data, offsets, block_size):
         data[offset + 1: offset + 1 + block_size] for offset in offsets
     ])
 
-# Step 44 - get_batch (not yet solved)
-# TODO: implement
+# Step 44 - get_batch
+def get_batch(data, block_size, batch_size, rng):
+    offsets = sample_random_batch_offsets(len(data), block_size, batch_size, rng)
+    return (
+        stack_x_batch(data, offsets, block_size),
+        stack_y_batch(data, offsets, block_size)
+    )
 
 # Step 45 - allocate_count_matrix (not yet solved)
 # TODO: implement
