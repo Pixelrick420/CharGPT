@@ -324,8 +324,17 @@ def sample_next_token(p_matrix, current_id, rng):
     
     return rng.choice(V, p=probabilities)
 
-# Step 52 - generate_sequence (not yet solved)
-# TODO: implement
+# Step 52 - generate_sequence
+def generate_sequence(p_matrix, start_id, length, rng):
+    sequence = np.zeros(length, dtype=int)
+    sequence[0] = start_id
+    current_id = start_id
+    
+    for i in range(1, length):
+        current_id = sample_next_token(p_matrix, current_id, rng)
+        sequence[i] = current_id
+        
+    return sequence
 
 # Step 53 - decode_generated_sequence (not yet solved)
 # TODO: implement
