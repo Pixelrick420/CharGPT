@@ -317,8 +317,12 @@ def row_sums_of_counts(n_matrix):
 def normalize_counts_to_probs(n_matrix):
     return n_matrix / row_sums_of_counts(n_matrix)
 
-# Step 51 - sample_next_token (not yet solved)
-# TODO: implement
+# Step 51 - sample_next_token
+def sample_next_token(p_matrix, current_id, rng):
+    probabilities = p_matrix[current_id]
+    V = len(probabilities)
+    
+    return rng.choice(V, p=probabilities)
 
 # Step 52 - generate_sequence (not yet solved)
 # TODO: implement
