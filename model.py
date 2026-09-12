@@ -183,8 +183,12 @@ def naive_softmax_1d(logits):
     exponents = np.exp(logits)
     return exponents / (np.sum(exponents))
 
-# Step 31 - softmax_overflow_demo (not yet solved)
-# TODO: implement
+# Step 31 - softmax_overflow_demo
+def softmax_overflow_demo(large_value):
+    out = dict()
+    out['naive_exp'] = np.exp(large_value)
+    out['overflowed'] = out['naive_exp'] == np.inf
+    return out
 
 # Step 32 - stable_softmax_1d (not yet solved)
 # TODO: implement
