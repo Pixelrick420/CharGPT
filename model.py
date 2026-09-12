@@ -255,8 +255,13 @@ def slice_y_at_offset(data, i, block_size):
 def sample_random_batch_offsets(data_len, block_size, batch_size, rng):
     return rng.integers(0, data_len - block_size, size=batch_size)
 
-# Step 42 - stack_x_batch (not yet solved)
-# TODO: implement
+# Step 42 - stack_x_batch
+import numpy as np
+
+def stack_x_batch(data, offsets, block_size):
+    return np.vstack([
+        data[offset: offset + block_size] for offset in offsets
+    ])
 
 # Step 43 - stack_y_batch (not yet solved)
 # TODO: implement
