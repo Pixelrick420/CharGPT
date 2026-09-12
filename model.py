@@ -313,8 +313,9 @@ def add_one_smoothing(n_matrix):
 def row_sums_of_counts(n_matrix):
     return sum_keepdims(n_matrix, 1)
 
-# Step 50 - normalize_counts_to_probs (not yet solved)
-# TODO: implement
+# Step 50 - normalize_counts_to_probs
+def normalize_counts_to_probs(n_matrix):
+    return n_matrix / row_sums_of_counts(n_matrix)
 
 # Step 51 - sample_next_token (not yet solved)
 # TODO: implement
