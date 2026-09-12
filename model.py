@@ -231,8 +231,9 @@ def encode_corpus_to_int_array(text, stoi):
 def pick_split_point(n, train_frac):
     return int(n * train_frac)
 
-# Step 37 - slice_train_and_val (not yet solved)
-# TODO: implement
+# Step 37 - slice_train_and_val
+def slice_train_and_val(data, split_idx):
+    return (data[:split_idx], data[split_idx:])
 
 # Step 38 - pick_block_size (not yet solved)
 # TODO: implement
