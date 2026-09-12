@@ -336,8 +336,9 @@ def generate_sequence(p_matrix, start_id, length, rng):
         
     return sequence
 
-# Step 53 - decode_generated_sequence (not yet solved)
-# TODO: implement
+# Step 53 - decode_generated_sequence
+def decode_generated_sequence(ids, itos):
+    return ''.join([itos[token_id] for token_id in ids])
 
 # Step 54 - log_prob_of_pair (not yet solved)
 # TODO: implement
