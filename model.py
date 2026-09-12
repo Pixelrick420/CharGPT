@@ -220,8 +220,12 @@ def read_text_file(text_blob):
     else:
         raise ValueError()
 
-# Step 35 - encode_corpus_to_int_array (not yet solved)
-# TODO: implement
+# Step 35 - encode_corpus_to_int_array
+def encode_corpus_to_int_array(text, stoi):
+    return np.array(
+        [stoi[char] for char in text],
+        dtype = np.int64
+    )
 
 # Step 36 - pick_split_point (not yet solved)
 # TODO: implement
