@@ -400,8 +400,11 @@ def forward_logits_lookup(w, ids):
 def logits_to_probs_rowwise(logits):
     return stable_softmax_2d_rowwise(logits)
 
-# Step 64 - gather_correct_token_probs (not yet solved)
-# TODO: implement
+# Step 64 - gather_correct_token_probs
+def gather_correct_token_probs(probs, targets):
+    return np.array([
+        probs[i, targets[i]] for i in range(len(targets))
+    ])
 
 # Step 65 - cross_entropy_loss (not yet solved)
 # TODO: implement
