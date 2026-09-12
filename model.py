@@ -190,8 +190,13 @@ def softmax_overflow_demo(large_value):
     out['overflowed'] = out['naive_exp'] == np.inf
     return out
 
-# Step 32 - stable_softmax_1d (not yet solved)
-# TODO: implement
+# Step 32 - stable_softmax_1d
+import numpy as np
+
+def stable_softmax_1d(logits):
+    shift = np.max(logits)
+    shifted_exponentials = np.exp(logits - shift) 
+    return shifted_exponentials / (np.sum(shifted_exponentials))
 
 # Step 33 - stable_softmax_2d_rowwise (not yet solved)
 # TODO: implement
