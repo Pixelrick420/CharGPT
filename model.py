@@ -69,7 +69,7 @@ def get_array_dtype(arr):
 import numpy as np
 
 def make_2d_zeros(rows, cols):
-    return np.zeros((rows, cols))
+    return np.zeros((rows, cols), dtype=np.int64)
 
 # Step 12 - make_2d_random
 import numpy as np
@@ -279,8 +279,11 @@ def get_batch(data, block_size, batch_size, rng):
         stack_y_batch(data, offsets, block_size)
     )
 
-# Step 45 - allocate_count_matrix (not yet solved)
-# TODO: implement
+# Step 45 - allocate_count_matrix
+import numpy as np
+
+def allocate_count_matrix(vocab_size):
+    return np.zeros((vocab_size, vocab_size), dtype = np.int64)
 
 # Step 46 - loop_fill_counts (not yet solved)
 # TODO: implement
