@@ -396,8 +396,9 @@ def observe_lookup_equivalence(w, ids):
 def forward_logits_lookup(w, ids):
     return w[ids]
 
-# Step 63 - logits_to_probs_rowwise (not yet solved)
-# TODO: implement
+# Step 63 - logits_to_probs_rowwise
+def logits_to_probs_rowwise(logits):
+    return stable_softmax_2d_rowwise(logits)
 
 # Step 64 - gather_correct_token_probs (not yet solved)
 # TODO: implement
