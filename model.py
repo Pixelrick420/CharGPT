@@ -193,13 +193,23 @@ def softmax_overflow_demo(large_value):
 # Step 32 - stable_softmax_1d
 import numpy as np
 
-def stable_softmax_1d(logits):
-    shift = max_along_axis(logits, axis=0)
-    shifted_exponentials = array_exp(logits - shift) 
-    return shifted_exponentials / (np.sum(shifted_exponentials))
+def stable_softmax_2d_rowwise(logits):
+    max_vals = max_along_axis(logits, axis=1, keepdims=True)
+    shifted_logits = logits - max_vals
+    exp_logits = array_exp(shifted_logits)
+    sum_exp = sum_keepdims(exp_logits, axis=1)
+    
+    return exp_logits / sum_exp
 
-# Step 33 - stable_softmax_2d_rowwise (not yet solved)
-# TODO: implement
+# Step 33 - stable_softmax_2d_rowwise
+import numpy as np
+
+def stable_softmax_2d_rowwise(logits):
+    max_vals = max_along_axis(logits, axis=1)
+    shifted_logits = logits - max_vals[:, None]
+    exp_logits = array_exp(shifted_logits)
+    sum_exp = sum_keepdims(exp_logits, axis=1)
+    return exp_logits / sum_exp
 
 # Step 34 - read_text_file (not yet solved)
 # TODO: implement
