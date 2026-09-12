@@ -160,8 +160,11 @@ import numpy as np
 def max_along_axis(arr, axis):
     return np.max(arr, axis=axis)
 
-# Step 27 - matmul (not yet solved)
-# TODO: implement
+# Step 27 - matmul
+import numpy as np
+
+def matmul(a, b):
+    return a.dot(b)
 
 # Step 28 - transpose_matrix (not yet solved)
 # TODO: implement
