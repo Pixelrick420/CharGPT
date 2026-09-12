@@ -285,8 +285,15 @@ import numpy as np
 def allocate_count_matrix(vocab_size):
     return np.zeros((vocab_size, vocab_size), dtype = np.int64)
 
-# Step 46 - loop_fill_counts (not yet solved)
-# TODO: implement
+# Step 46 - loop_fill_counts
+import numpy as np
+
+def loop_fill_counts(n_matrix, data):
+    n = len(data)
+    for i in range(1, n):
+        n_matrix[data[i - 1]][data[i]] += 1
+    
+    return n_matrix
 
 # Step 47 - vectorize_counts_add_at (not yet solved)
 # TODO: implement
