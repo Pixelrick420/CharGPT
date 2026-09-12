@@ -170,8 +170,11 @@ def matmul(a, b):
 def transpose_matrix(arr):
     return np.transpose(arr)
 
-# Step 29 - sum_keepdims (not yet solved)
-# TODO: implement
+# Step 29 - sum_keepdims
+import numpy as np
+
+def sum_keepdims(arr, axis):
+    return np.sum(arr, axis=axis, keepdims=True)
 
 # Step 30 - naive_softmax_1d (not yet solved)
 # TODO: implement
