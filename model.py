@@ -227,8 +227,9 @@ def encode_corpus_to_int_array(text, stoi):
         dtype = np.int64
     )
 
-# Step 36 - pick_split_point (not yet solved)
-# TODO: implement
+# Step 36 - pick_split_point
+def pick_split_point(n, train_frac):
+    return int(n * train_frac)
 
 # Step 37 - slice_train_and_val (not yet solved)
 # TODO: implement
