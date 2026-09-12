@@ -344,8 +344,10 @@ def decode_generated_sequence(ids, itos):
 def log_prob_of_pair(p_matrix, current_id, next_id):
     return np.log(p_matrix[current_id][next_id])
 
-# Step 55 - sum_negative_log_probs (not yet solved)
-# TODO: implement
+# Step 55 - sum_negative_log_probs
+def sum_negative_log_probs(p_matrix, data):
+    n = len(data)
+    return np.sum([-log_prob_of_pair(p_matrix, data[i - 1], data[i]) for i in range(1, n)])
 
 # Step 56 - average_nll (not yet solved)
 # TODO: implement
