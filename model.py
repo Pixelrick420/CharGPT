@@ -194,8 +194,8 @@ def softmax_overflow_demo(large_value):
 import numpy as np
 
 def stable_softmax_1d(logits):
-    shift = np.max(logits)
-    shifted_exponentials = np.exp(logits - shift) 
+    shift = max_along_axis(logits, axis=0)
+    shifted_exponentials = array_exp(logits - shift) 
     return shifted_exponentials / (np.sum(shifted_exponentials))
 
 # Step 33 - stable_softmax_2d_rowwise (not yet solved)
