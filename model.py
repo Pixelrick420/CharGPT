@@ -414,8 +414,23 @@ def cross_entropy_loss(probs, targets):
     log_probs = array_log(correct_probs)
     return -np.mean(log_probs)
 
-# Step 66 - derive_dlogits_on_paper (not yet solved)
-# TODO: implement
+# Step 66 - derive_dlogits_on_paper
+def derive_dlogits_on_paper():
+    return """Derivation of the gradient of mean cross-entropy loss with respect to the logits:
+
+1. For a single example i, let z_i be the logits vector and y_i be the correct target class.
+2. The probabilities are given by the softmax function: p_i = softmax(z_i).
+3. The cross-entropy loss for this single example is L_i = -log(p_{i, y_i}).
+4. Taking the derivative of L_i with respect to the j-th logit z_{i,j} yields a well-known result:
+   - If j == y_i: d(L_i)/d(z_{i,j}) = p_{i,j} - 1
+   - If j != y_i: d(L_i)/d(z_{i,j}) = p_{i,j}
+   In vector form, this is: d(L_i)/d(z_i) = p_i - onehot(y_i).
+5. The total loss L is the mean over the batch of size B: L = (1/B) * sum_{i=1}^B L_i.
+6. Therefore, the gradient of the mean loss with respect to the entire logits matrix is the average of the individual gradients.
+
+Final formula:
+dL/dlogits = (probs - onehot(targets)) / B
+"""
 
 # Step 67 - compute_dlogits (not yet solved)
 # TODO: implement
