@@ -442,8 +442,9 @@ def compute_dlogits(probs, targets):
     dlogits /= B
     return dlogits
 
-# Step 68 - derive_dw_on_paper (not yet solved)
-# TODO: implement
+# Step 68 - derive_dw_on_paper
+def derive_dw_on_paper():
+    return """Forward: logits = onehot(ids) @ W, equivalently logits[b] = W[ids[b]].\nShapes: ids (B,), onehot O (B, V), W (V, D), logits (B, D), dlogits (B, D).\nChain rule: dL/dW = O.T @ dlogits, shape (V, D).\nSince O has a single 1 per row at column ids[b], O.T @ dlogits sums rows of dlogits into rows of dW.\nRow v of dW equals the sum of dlogits[b] over all b with ids[b] == v.\nImplementation: scatter-add dlogits rows into dW at indices ids."""
 
 # Step 69 - compute_dw_scatter_add (not yet solved)
 # TODO: implement
