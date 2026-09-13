@@ -572,8 +572,11 @@ def relu_backward(dy, cache):
 def softmax_cross_entropy_backward(probs, targets):
     return compute_dlogits(probs, targets)
 
-# Step 84 - layernorm_forward_mean (not yet solved)
-# TODO: implement
+# Step 84 - layernorm_forward_mean
+import numpy as np
+
+def layernorm_forward_mean(x):
+    return np.mean(x, axis=-1, keepdims=True)
 
 # Step 85 - layernorm_forward_variance (not yet solved)
 # TODO: implement
