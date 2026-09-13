@@ -550,8 +550,10 @@ def bias_add_forward(x, b):
         }
     }
 
-# Step 80 - bias_add_backward_db (not yet solved)
-# TODO: implement
+# Step 80 - bias_add_backward_db
+def bias_add_backward_db(dy, cache):
+    """Compute db from upstream gradient dy for y = x + b."""
+    return np.sum(dy, axis=0)
 
 # Step 81 - relu_forward (not yet solved)
 # TODO: implement
