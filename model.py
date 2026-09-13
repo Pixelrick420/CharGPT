@@ -613,8 +613,11 @@ def layernorm_forward_affine(x, gamma, beta, eps):
         }
     }
 
-# Step 88 - layernorm_backward_subtract_mean (not yet solved)
-# TODO: implement
+# Step 88 - layernorm_backward_subtract_mean
+import numpy as np
+
+def layernorm_backward_subtract_mean(dy, cache):
+    return dy - np.mean(dy, axis=-1, keepdims=True)
 
 # Step 89 - layernorm_backward_divide_std (not yet solved)
 # TODO: implement
