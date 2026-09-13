@@ -568,8 +568,9 @@ def relu_backward(dy, cache):
     x = cache['x']
     return dy * (x > 0)
 
-# Step 83 - softmax_cross_entropy_backward (not yet solved)
-# TODO: implement
+# Step 83 - softmax_cross_entropy_backward
+def softmax_cross_entropy_backward(probs, targets):
+    return compute_dlogits(probs, targets)
 
 # Step 84 - layernorm_forward_mean (not yet solved)
 # TODO: implement
