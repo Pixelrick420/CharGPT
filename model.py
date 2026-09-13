@@ -650,8 +650,30 @@ def layernorm_backward_full(dy, cache):
         'dbeta': dbeta
     }
 
-# Step 91 - layernorm_backward_implementation (not yet solved)
-# TODO: implement
+# Step 91 - layernorm_backward_implementation
+import numpy as np
+
+def layernorm_backward_implementation(d_out, cache):
+    x_hat = cache['x_hat']
+    gamma = cache['gamma']
+    var = cache['var']
+    eps = cache['eps']
+    
+    dgamma = np.sum(d_out * x_hat, axis=0)
+    dbeta = np.sum(d_out, axis=0)
+    dx_hat = d_out * gamma
+    
+    std = np.sqrt(var + eps)
+    mean_dx_hat = np.mean(dx_hat, axis=-1, keepdims=True)
+    mean_dx_hat_x_hat = np.mean(dx_hat * x_hat, axis=-1, keepdims=True)
+    
+    dx = (dx_hat - mean_dx_hat - x_hat * mean_dx_hat_x_hat) / std
+    
+    return {
+        'dx': dx,
+        'dgamma': dgamma,
+        'dbeta': dbeta
+    }
 
 # Step 92 - create_token_embedding (not yet solved)
 # TODO: implement
