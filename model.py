@@ -461,8 +461,19 @@ import numpy as np
 def sgd_update_w(w, dw, learning_rate):
     return (w - learning_rate * dw)
 
-# Step 71 - run_one_training_step (not yet solved)
-# TODO: implement
+# Step 71 - run_one_training_step
+def run_one_training_step(w, ids, targets, learning_rate):
+    logits = forward_logits_lookup(w, ids)
+    probs = logits_to_probs_rowwise(logits)
+    loss = cross_entropy_loss(probs, targets)
+    
+    dlogits = compute_dlogits(probs, targets)
+    vocab_size = w.shape[0]
+    dw = compute_dw_scatter_add(ids, dlogits, vocab_size)
+    
+    updated_w = sgd_update_w(w, dw, learning_rate)
+    
+    return {'w': updated_w, 'loss': loss}
 
 # Step 72 - train_neural_bigram_loop (not yet solved)
 # TODO: implement
