@@ -522,8 +522,14 @@ def linear_forward(x, w):
 def derive_dx_on_paper():
         return "Y = X @ W\ndL/dX = dY @ W.T\nshapes: X (B, In), W (In, Out), dY (B, Out) -> dL/dX (B, In)"
 
-# Step 76 - derive_linear_dw_on_paper (not yet solved)
-# TODO: implement
+# Step 76 - derive_linear_dw_on_paper
+def derive_linear_dw_on_paper():
+    return """Forward pass of the linear layer: Y = X @ W
+Shapes: X is (N, D_in), W is (D_in, D_out), Y is (N, D_out), and dY is (N, D_out).
+By the multivariate chain rule, the gradient dW must have the same shape as W (D_in, D_out).
+To achieve this shape and sum the gradients across the batch dimension N, we multiply the transpose of X by dY.
+Therefore, the gradient of the loss with respect to W is:
+dL/dW = X.T @ dY"""
 
 # Step 77 - linear_backward_dx (not yet solved)
 # TODO: implement
