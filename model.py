@@ -531,8 +531,10 @@ To achieve this shape and sum the gradients across the batch dimension N, we mul
 Therefore, the gradient of the loss with respect to W is:
 dL/dW = X.T @ dY"""
 
-# Step 77 - linear_backward_dx (not yet solved)
-# TODO: implement
+# Step 77 - linear_backward_dx
+def linear_backward_dx(dy, cache):
+    w = cache['w']
+    return dy.dot(w.T)
 
 # Step 78 - linear_backward_dw (not yet solved)
 # TODO: implement
