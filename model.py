@@ -518,8 +518,9 @@ def linear_forward(x, w):
         }
     }
 
-# Step 75 - derive_dx_on_paper (not yet solved)
-# TODO: implement
+# Step 75 - derive_dx_on_paper
+def derive_dx_on_paper():
+        return "Y = X @ W\ndL/dX = dY @ W.T\nshapes: X (B, In), W (In, Out), dY (B, Out) -> dL/dX (B, In)"
 
 # Step 76 - derive_linear_dw_on_paper (not yet solved)
 # TODO: implement
