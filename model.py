@@ -541,8 +541,14 @@ def linear_backward_dw(dy, cache):
     x = cache['x']
     return x.T.dot(dy)
 
-# Step 79 - bias_add_forward (not yet solved)
-# TODO: implement
+# Step 79 - bias_add_forward
+def bias_add_forward(x, b):
+    return {
+        'y' : x + b,
+        'cache' : {
+            'b_shape' : b.shape
+        }
+    }
 
 # Step 80 - bias_add_backward_db (not yet solved)
 # TODO: implement
