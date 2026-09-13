@@ -446,8 +446,14 @@ def compute_dlogits(probs, targets):
 def derive_dw_on_paper():
     return """Forward: logits = onehot(ids) @ W, equivalently logits[b] = W[ids[b]].\nShapes: ids (B,), onehot O (B, V), W (V, D), logits (B, D), dlogits (B, D).\nChain rule: dL/dW = O.T @ dlogits, shape (V, D).\nSince O has a single 1 per row at column ids[b], O.T @ dlogits sums rows of dlogits into rows of dW.\nRow v of dW equals the sum of dlogits[b] over all b with ids[b] == v.\nImplementation: scatter-add dlogits rows into dW at indices ids."""
 
-# Step 69 - compute_dw_scatter_add (not yet solved)
-# TODO: implement
+# Step 69 - compute_dw_scatter_add
+import numpy as np
+
+def compute_dw_scatter_add(ids, dlogits, vocab_size):
+    _, V_out = dlogits.shape
+    dW = np.zeros((vocab_size, V_out), dtype=dlogits.dtype)
+    np.add.at(dW, ids, dlogits)
+    return dW
 
 # Step 70 - sgd_update_w (not yet solved)
 # TODO: implement
