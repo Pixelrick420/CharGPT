@@ -432,8 +432,15 @@ Final formula:
 dL/dlogits = (probs - onehot(targets)) / B
 """
 
-# Step 67 - compute_dlogits (not yet solved)
-# TODO: implement
+# Step 67 - compute_dlogits
+import numpy as np
+
+def compute_dlogits(probs, targets):
+    B = probs.shape[0]
+    dlogits = probs.copy()
+    dlogits[np.arange(B), targets] -= 1.0
+    dlogits /= B
+    return dlogits
 
 # Step 68 - derive_dw_on_paper (not yet solved)
 # TODO: implement
