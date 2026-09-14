@@ -763,8 +763,11 @@ def softmax_attention_weights(masked_scores):
     exp_scores = np.exp(masked_scores - row_max)
     return exp_scores / np.sum(exp_scores, axis=-1, keepdims=True)
 
-# Step 108 - attention_weighted_values (not yet solved)
-# TODO: implement
+# Step 108 - attention_weighted_values
+import numpy as np
+
+def attention_weighted_values(attn, v):
+    return attn @ v
 
 # Step 109 - apply_output_projection (not yet solved)
 # TODO: implement
