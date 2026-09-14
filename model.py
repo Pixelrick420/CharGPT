@@ -757,8 +757,11 @@ def build_causal_mask(seq_len):
 def apply_causal_mask(scaled_scores, causal_mask):
     return np.where(causal_mask, scaled_scores, -np.inf)
 
-# Step 107 - softmax_attention_weights (not yet solved)
-# TODO: implement
+# Step 107 - softmax_attention_weights
+def softmax_attention_weights(masked_scores):
+    row_max = np.max(masked_scores, axis=-1, keepdims=True)
+    exp_scores = np.exp(masked_scores - row_max)
+    return exp_scores / np.sum(exp_scores, axis=-1, keepdims=True)
 
 # Step 108 - attention_weighted_values (not yet solved)
 # TODO: implement
