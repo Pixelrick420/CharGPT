@@ -733,8 +733,9 @@ def create_qkv_projections(d_model, d_head, scale=0.02):
 def compute_query(x, w_q):
     return x @ w_q
 
-# Step 101 - compute_key (not yet solved)
-# TODO: implement
+# Step 101 - compute_key
+def compute_key(x, w_k):
+    return x @ w_k
 
 # Step 102 - compute_value (not yet solved)
 # TODO: implement
