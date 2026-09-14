@@ -804,8 +804,17 @@ def attention_value_backward(d_attn_out, cache):
         'd_v': d_v
     }
 
-# Step 112 - masked_softmax_backward (not yet solved)
-# TODO: implement
+# Step 112 - masked_softmax_backward
+def masked_softmax_backward(d_attn, cache):
+    attn = cache['attn']
+    causal_mask = cache['causal_mask']
+    
+    sum_term = np.sum(attn * d_attn, axis=-1, keepdims=True)
+    
+    d_scores = attn * (d_attn - sum_term)
+    d_scores = np.where(causal_mask, d_scores, 0.0)
+    
+    return d_scores
 
 # Step 113 - scale_scores_backward (not yet solved)
 # TODO: implement
