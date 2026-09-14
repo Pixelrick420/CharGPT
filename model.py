@@ -710,8 +710,9 @@ import numpy as np
 def slice_positional_embedding(positional_matrix, seq_len):
     return positional_matrix[:seq_len, :]
 
-# Step 97 - add_token_and_positional_embeddings (not yet solved)
-# TODO: implement
+# Step 97 - add_token_and_positional_embeddings
+def add_token_and_positional_embeddings(tok_emb, pos_emb):
+    return tok_emb + pos_emb
 
 # Step 98 - embedding_sum_backward (not yet solved)
 # TODO: implement
