@@ -745,8 +745,10 @@ def compute_value(x, w_v):
 def compute_attention_scores(q, k):
     return q @ k.swapaxes(1, 2)
 
-# Step 104 - scale_attention_scores (not yet solved)
-# TODO: implement
+# Step 104 - scale_attention_scores
+def scale_attention_scores(scores, d_head):
+    import numpy as np
+    return scores / np.sqrt(d_head)
 
 # Step 105 - build_causal_mask (not yet solved)
 # TODO: implement
