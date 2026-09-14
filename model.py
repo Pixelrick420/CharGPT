@@ -741,8 +741,9 @@ def compute_key(x, w_k):
 def compute_value(x, w_v):
     return x @ w_v
 
-# Step 103 - compute_attention_scores (not yet solved)
-# TODO: implement
+# Step 103 - compute_attention_scores
+def compute_attention_scores(q, k):
+    return q @ k.swapaxes(1, 2)
 
 # Step 104 - scale_attention_scores (not yet solved)
 # TODO: implement
