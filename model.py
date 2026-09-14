@@ -747,7 +747,6 @@ def compute_attention_scores(q, k):
 
 # Step 104 - scale_attention_scores
 def scale_attention_scores(scores, d_head):
-    import numpy as np
     return scores / np.sqrt(d_head)
 
 # Step 105 - build_causal_mask (not yet solved)
