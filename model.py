@@ -753,8 +753,9 @@ def scale_attention_scores(scores, d_head):
 def build_causal_mask(seq_len):
     return np.tril(np.ones((seq_len, seq_len), dtype=bool))
 
-# Step 106 - apply_causal_mask (not yet solved)
-# TODO: implement
+# Step 106 - apply_causal_mask
+def apply_causal_mask(scaled_scores, causal_mask):
+    return np.where(causal_mask, scaled_scores, -np.inf)
 
 # Step 107 - softmax_attention_weights (not yet solved)
 # TODO: implement
