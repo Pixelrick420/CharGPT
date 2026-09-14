@@ -769,8 +769,11 @@ import numpy as np
 def attention_weighted_values(attn, v):
     return attn @ v
 
-# Step 109 - apply_output_projection (not yet solved)
-# TODO: implement
+# Step 109 - apply_output_projection
+import numpy as np
+
+def apply_output_projection(attn_out, w_o):
+    return attn_out @ w_o
 
 # Step 110 - output_projection_backward (not yet solved)
 # TODO: implement
