@@ -914,8 +914,9 @@ def multihead_masked_softmax_scores(scores, mask):
     flat_probs = stable_softmax_2d_rowwise(flat_scores)
     return flat_probs.reshape(B, n_heads, T, T)
 
-# Step 125 - multihead_weighted_sum (not yet solved)
-# TODO: implement
+# Step 125 - multihead_weighted_sum
+def multihead_weighted_sum(weights, v_heads):
+    return np.matmul(weights, v_heads)
 
 # Step 126 - transpose_heads_to_back (not yet solved)
 # TODO: implement
