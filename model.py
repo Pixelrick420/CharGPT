@@ -896,8 +896,9 @@ def transpose_heads_to_front(x):
 def get_multihead_n_heads(config):
     return config['n_heads']
 
-# Step 122 - get_multihead_sequence_length (not yet solved)
-# TODO: implement
+# Step 122 - get_multihead_sequence_length
+def get_multihead_sequence_length(x):
+    return get_array_shape(x)[1]
 
 # Step 123 - compute_d_head (not yet solved)
 # TODO: implement
