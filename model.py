@@ -900,8 +900,11 @@ def get_multihead_n_heads(config):
 def get_multihead_sequence_length(x):
     return get_array_shape(x)[1]
 
-# Step 123 - compute_d_head (not yet solved)
-# TODO: implement
+# Step 123 - compute_d_head
+def compute_d_head(d_model, n_heads):
+    if d_model % n_heads != 0:
+        raise ValueError()
+    return d_model // n_heads
 
 # Step 124 - multihead_masked_softmax_scores (not yet solved)
 # TODO: implement
