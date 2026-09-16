@@ -906,8 +906,13 @@ def compute_d_head(d_model, n_heads):
         raise ValueError()
     return d_model // n_heads
 
-# Step 124 - multihead_masked_softmax_scores (not yet solved)
-# TODO: implement
+# Step 124 - multihead_masked_softmax_scores
+def multihead_masked_softmax_scores(scores, mask):
+    B, n_heads, T, _ = scores.shape
+    masked_scores = apply_causal_mask(scores, mask)
+    flat_scores = masked_scores.reshape(B * n_heads * T, T)
+    flat_probs = stable_softmax_2d_rowwise(flat_scores)
+    return flat_probs.reshape(B, n_heads, T, T)
 
 # Step 125 - multihead_weighted_sum (not yet solved)
 # TODO: implement
