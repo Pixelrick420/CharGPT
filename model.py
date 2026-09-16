@@ -926,8 +926,11 @@ def transpose_heads_to_back(x):
 def get_multihead_output_sequence_length(x_heads_back):
     return x_heads_back.shape[1]
 
-# Step 128 - merge_heads_to_d_model (not yet solved)
-# TODO: implement
+# Step 128 - merge_heads_to_d_model
+def merge_heads_to_d_model(x_heads_back):
+    B, T, n_heads, d_head = x_heads_back.shape
+    d_model = n_heads * d_head
+    return x_heads_back.reshape(B,T, d_model)
 
 # Step 129 - multihead_output_projection_forward (not yet solved)
 # TODO: implement
