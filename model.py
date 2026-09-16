@@ -955,8 +955,18 @@ def multihead_reshape_transpose_backward(d_merged, shape_info):
     
     return d_heads_front
 
-# Step 131 - ffn_linear_one_forward (not yet solved)
-# TODO: implement
+# Step 131 - ffn_linear_one_forward
+def ffn_linear_one_forward(x, w1, b1):
+    linear_res = linear_forward(x, w1)
+    bias_res = bias_add_forward(linear_res['y'], b1)
+    
+    return {
+        'h1': bias_res['y'],
+        'cache': {
+            'x': x,
+            'w1': w1
+        }
+    }
 
 # Step 132 - ffn_activation_forward (not yet solved)
 # TODO: implement
