@@ -892,8 +892,9 @@ def reshape_to_heads(x, n_heads, d_head):
 def transpose_heads_to_front(x):
     return x.transpose(0, 2, 1, 3)
 
-# Step 121 - get_multihead_n_heads (not yet solved)
-# TODO: implement
+# Step 121 - get_multihead_n_heads
+def get_multihead_n_heads(config):
+    return config['n_heads']
 
 # Step 122 - get_multihead_sequence_length (not yet solved)
 # TODO: implement
