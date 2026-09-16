@@ -922,8 +922,9 @@ def multihead_weighted_sum(weights, v_heads):
 def transpose_heads_to_back(x):
     return x.transpose(0, 2, 1, 3)
 
-# Step 127 - get_multihead_output_sequence_length (not yet solved)
-# TODO: implement
+# Step 127 - get_multihead_output_sequence_length
+def get_multihead_output_sequence_length(x_heads_back):
+    return x_heads_back.shape[1]
 
 # Step 128 - merge_heads_to_d_model (not yet solved)
 # TODO: implement
