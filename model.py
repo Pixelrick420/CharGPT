@@ -932,8 +932,18 @@ def merge_heads_to_d_model(x_heads_back):
     d_model = n_heads * d_head
     return x_heads_back.reshape(B,T, d_model)
 
-# Step 129 - multihead_output_projection_forward (not yet solved)
-# TODO: implement
+# Step 129 - multihead_output_projection_forward
+def multihead_output_projection_forward(merged, w_out, b_out):
+    linear_res = linear_forward(merged, w_out)
+    bias_res = bias_add_forward(linear_res['y'], b_out)
+    
+    return {
+        'out': bias_res['y'],
+        'cache': {
+            'merged': merged,
+            'w_out': w_out
+        }
+    }
 
 # Step 130 - multihead_reshape_transpose_backward (not yet solved)
 # TODO: implement
