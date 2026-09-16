@@ -888,8 +888,9 @@ def reshape_to_heads(x, n_heads, d_head):
     B, T, d_model = x.shape
     return x.reshape(B, T, n_heads, d_head)
 
-# Step 120 - transpose_heads_to_front (not yet solved)
-# TODO: implement
+# Step 120 - transpose_heads_to_front
+def transpose_heads_to_front(x):
+    return x.transpose(0, 2, 1, 3)
 
 # Step 121 - get_multihead_n_heads (not yet solved)
 # TODO: implement
