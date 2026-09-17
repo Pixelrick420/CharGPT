@@ -1040,8 +1040,9 @@ def ffn_backward(d_out, cache):
         'db2': db2
     }
 
-# Step 135 - residual_forward (not yet solved)
-# TODO: implement
+# Step 135 - residual_forward
+def residual_forward(x, s):
+    return x + s
 
 # Step 136 - residual_backward (not yet solved)
 # TODO: implement
