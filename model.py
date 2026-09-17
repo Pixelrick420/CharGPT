@@ -1244,8 +1244,15 @@ def forward_through_all_blocks(x, blocks):
         caches.append(out['cache'])
     return h, caches
 
-# Step 142 - backward_through_all_blocks (not yet solved)
-# TODO: implement
+# Step 142 - backward_through_all_blocks
+def backward_through_all_blocks(d_y, caches, blocks):
+    n_layers = len(blocks)
+    grads = [None] * n_layers
+    d_h = d_y
+    for i in range(n_layers - 1, -1, -1):
+        d_h, grads_block = transformer_block_backward(d_h, caches[i], blocks[i])
+        grads[i] = grads_block
+    return d_h, grads
 
 # Step 143 - final_layernorm_forward (not yet solved)
 # TODO: implement
