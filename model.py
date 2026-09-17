@@ -1074,8 +1074,88 @@ def pre_layernorm_sublayer_forward(x, ln_params, sublayer_fn, sublayer_params):
         }
     }
 
-# Step 138 - transformer_block_forward (not yet solved)
-# TODO: implement
+# Step 138 - transformer_block_forward
+import numpy as np
+
+def transformer_block_forward(x, block_params):
+    
+    def attn_wrapper(norm_x, params):
+        Wq = params.get('Wq', params.get('w_q'))
+        Wk = params.get('Wk', params.get('w_k'))
+        Wv = params.get('Wv', params.get('w_v'))
+        Wo = params.get('Wo', params.get('w_o', params.get('W_o', params.get('w_out'))))
+        bo = params.get('bo', params.get('b_o', params.get('b_out')))
+        n_heads = params['n_heads']
+        
+        B, T, d_model = norm_x.shape
+        d_head = d_model // n_heads
+        
+        q = (norm_x @ Wq).reshape(B, T, n_heads, d_head).transpose(0, 2, 1, 3)
+        k = (norm_x @ Wk).reshape(B, T, n_heads, d_head).transpose(0, 2, 1, 3)
+        v = (norm_x @ Wv).reshape(B, T, n_heads, d_head).transpose(0, 2, 1, 3)
+        
+        scores = q @ k.swapaxes(-1, -2) / np.sqrt(d_head)
+        
+        mask = np.tril(np.ones((T, T), dtype=bool))
+        scores = np.where(mask, scores, -np.inf)
+        
+        row_max = np.max(scores, axis=-1, keepdims=True)
+        probs = np.exp(scores - row_max) / np.sum(np.exp(scores - row_max), axis=-1, keepdims=True)
+        
+        out_heads = probs @ v
+        merged = out_heads.transpose(0, 2, 1, 3).reshape(B, T, d_model)
+        
+        y = merged @ Wo if Wo is not None else merged
+        
+        if bo is not None:
+            y += bo
+            
+        return {
+            'y': y,
+            'cache': {
+                'x': norm_x,
+                'q': q, 'k': k, 'v': v,
+                'probs': probs, 
+                'merged': merged,
+                'Wo': Wo
+            }
+        }
+
+    def ffn_wrapper(norm_x, params):
+        w1 = params.get('w1', params.get('W1'))
+        b1 = params.get('b1', params.get('B1'))
+        w2 = params.get('w2', params.get('W2'))
+        b2 = params.get('b2', params.get('B2'))
+        
+        h1 = norm_x @ w1 + b1
+        a1 = np.maximum(0, h1)
+        y = a1 @ w2 + b2
+        
+        return {
+            'y': y,
+            'cache': {
+                'x': norm_x, 
+                'w1': w1, 'b1': b1, 
+                'h1': h1, 'a1': a1, 
+                'w2': w2, 'b2': b2
+            }
+        }
+
+    attn_out = pre_layernorm_sublayer_forward(
+        x, block_params['ln1'], attn_wrapper, block_params['attn']
+    )
+    
+    ffn_out = pre_layernorm_sublayer_forward(
+        attn_out['y'], block_params['ln2'], ffn_wrapper, block_params['ffn']
+    )
+    
+    return {
+        'y': ffn_out['y'],
+        'cache': {
+            'attn_branch': attn_out['cache'],
+            'ffn_branch': ffn_out['cache']
+        }
+    }
 
 # Step 139 - transformer_block_backward (not yet solved)
 # TODO: implement
