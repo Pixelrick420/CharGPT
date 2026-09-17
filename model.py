@@ -974,8 +974,21 @@ def ffn_activation_forward(h1):
     
     return relu_res['y'], {'h1': h1}
 
-# Step 133 - ffn_linear_two_forward (not yet solved)
-# TODO: implement
+# Step 133 - ffn_linear_two_forward
+def ffn_linear_two_forward(a1, w2, b2):
+    out_linear = linear_forward(a1, w2)
+    h2_pre = next(v for k, v in out_linear.items() if k != 'cache')
+    
+    out_bias = bias_add_forward(h2_pre, b2)
+    h2 = next(v for k, v in out_bias.items() if k != 'cache')
+    
+    return {
+        'h2': h2,
+        'cache': {
+            'a1': a1,
+            'w2': w2
+        }
+    }
 
 # Step 134 - ffn_backward (not yet solved)
 # TODO: implement
