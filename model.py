@@ -1254,8 +1254,22 @@ def backward_through_all_blocks(d_y, caches, blocks):
         grads[i] = grads_block
     return d_h, grads
 
-# Step 143 - final_layernorm_forward (not yet solved)
-# TODO: implement
+# Step 143 - final_layernorm_forward
+def final_layernorm_forward(x, gamma, beta):
+    mean = np.mean(x, axis=-1, keepdims=True)
+    var = np.mean((x - mean) ** 2, axis=-1, keepdims=True)
+    x_hat = (x - mean) / np.sqrt(var + 1e-5)
+    y = x_hat * gamma + beta
+    
+    cache = {
+        'x': x,
+        'mean': mean,
+        'var': var,
+        'x_hat': x_hat,
+        'gamma': gamma
+    }
+    
+    return y, cache
 
 # Step 144 - lm_head_linear_forward (not yet solved)
 # TODO: implement
