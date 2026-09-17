@@ -1234,8 +1234,15 @@ def stack_transformer_blocks(n_layers, d_model, n_heads, d_ff):
         
     return blocks
 
-# Step 141 - forward_through_all_blocks (not yet solved)
-# TODO: implement
+# Step 141 - forward_through_all_blocks
+def forward_through_all_blocks(x, blocks):
+    h = x
+    caches = []
+    for block_params in blocks:
+        out = transformer_block_forward(h, block_params)
+        h = out['y']
+        caches.append(out['cache'])
+    return h, caches
 
 # Step 142 - backward_through_all_blocks (not yet solved)
 # TODO: implement
