@@ -1157,8 +1157,49 @@ def transformer_block_forward(x, block_params):
         }
     }
 
-# Step 139 - transformer_block_backward (not yet solved)
-# TODO: implement
+# Step 139 - transformer_block_backward
+import numpy as np
+
+def transformer_block_backward(d_y, cache, block_params):
+    x = cache['attn_branch']['x']
+    full_cache = _complete_block_cache(x, block_params)
+    
+    d_ffn_out = d_y
+    d_ln2_out, ffn_grads = _ffn_sublayer_backward(
+        d_ffn_out, 
+        full_cache['ffn_branch']['sublayer_cache'], 
+        block_params['ffn']
+    )
+    
+    d_ln2_in, d_ln2_gamma, d_ln2_beta = layernorm_backward_affine(
+        d_ln2_out, 
+        full_cache['ffn_branch']['ln_cache']
+    )
+    
+    d_h1 = d_y + d_ln2_in
+    
+    d_attn_out = d_h1
+    d_ln1_out, attn_grads = _attn_sublayer_backward(
+        d_attn_out, 
+        full_cache['attn_branch']['sublayer_cache'], 
+        block_params['attn']
+    )
+    
+    d_ln1_in, d_ln1_gamma, d_ln1_beta = layernorm_backward_affine(
+        d_ln1_out, 
+        full_cache['attn_branch']['ln_cache']
+    )
+    
+    d_x = d_h1 + d_ln1_in
+    
+    grads = {
+        'ln1': {'gamma': d_ln1_gamma, 'beta': d_ln1_beta},
+        'ln2': {'gamma': d_ln2_gamma, 'beta': d_ln2_beta},
+        'attn': attn_grads,
+        'ffn': ffn_grads
+    }
+    
+    return d_x, grads
 
 # Step 140 - stack_transformer_blocks (not yet solved)
 # TODO: implement
