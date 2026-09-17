@@ -1313,8 +1313,56 @@ def full_model_forward(ids, model_params):
     
     return lm_head_out['logits'], caches
 
-# Step 146 - full_model_backward (not yet solved)
-# TODO: implement
+# Step 146 - full_model_backward
+def full_model_backward(d_logits, caches, model_params):
+    x_lm = caches['lm_head']['x']
+    w_lm = caches['lm_head']['w_lm']
+    
+    B, T, V = d_logits.shape
+    D = x_lm.shape[-1]
+    
+    dx_lm = d_logits @ w_lm.T
+    dw_lm = x_lm.reshape(-1, D).T @ d_logits.reshape(-1, V)
+    db_lm = np.sum(d_logits, axis=(0, 1))
+    
+    dy = dx_lm
+    x_hat = caches['ln_f']['x_hat']
+    gamma = caches['ln_f']['gamma']
+    var = caches['ln_f']['var']
+    
+    dgamma = np.sum(dy * x_hat, axis=(0, 1))
+    dbeta = np.sum(dy, axis=(0, 1))
+    
+    dx_hat = dy * gamma
+    std = np.sqrt(var + 1e-5)
+    mean_dx_hat = np.mean(dx_hat, axis=-1, keepdims=True)
+    mean_dx_hat_x_hat = np.mean(dx_hat * x_hat, axis=-1, keepdims=True)
+    
+    dx_ln = (dx_hat - mean_dx_hat - x_hat * mean_dx_hat_x_hat) / std
+    
+    d_emb_sum, blocks_grads = backward_through_all_blocks(dx_ln, caches['blocks'], model_params['blocks'])
+    
+    d_tok_emb = np.zeros_like(model_params['tok_emb'])
+    token_ids = caches['emb']['tok_cache']['token_ids'] if 'tok_cache' in caches['emb'] else caches['emb']['token_ids']
+    np.add.at(d_tok_emb, token_ids, d_emb_sum)
+    
+    d_pos_emb = np.zeros_like(model_params['pos_emb'])
+    seq_len = caches['emb']['seq_len'] if 'seq_len' in caches['emb'] else d_emb_sum.shape[1]
+    d_pos_emb[:seq_len] = np.sum(d_emb_sum, axis=0)
+    
+    return {
+        'tok_emb': d_tok_emb,
+        'pos_emb': d_pos_emb,
+        'blocks': blocks_grads,
+        'ln_f': {
+            'gamma': dgamma,
+            'beta': dbeta
+        },
+        'lm_head': {
+            'w_lm': dw_lm,
+            'b_lm': db_lm
+        }
+    }
 
 # Step 147 - initialize_adam_moments (not yet solved)
 # TODO: implement
