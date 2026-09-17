@@ -1044,8 +1044,9 @@ def ffn_backward(d_out, cache):
 def residual_forward(x, s):
     return x + s
 
-# Step 136 - residual_backward (not yet solved)
-# TODO: implement
+# Step 136 - residual_backward
+def residual_backward(d_y):
+    return d_y.copy(), d_y.copy()
 
 # Step 137 - pre_layernorm_sublayer_forward (not yet solved)
 # TODO: implement
