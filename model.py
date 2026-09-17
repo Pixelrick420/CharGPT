@@ -990,8 +990,55 @@ def ffn_linear_two_forward(a1, w2, b2):
         }
     }
 
-# Step 134 - ffn_backward (not yet solved)
-# TODO: implement
+# Step 134 - ffn_backward
+def ffn_backward(d_out, cache):
+    x = cache['x']
+    w1 = cache['w1']
+    h1 = cache['h1']
+    a1 = cache['a1']
+    w2 = cache['w2']
+    
+    B, T, _ = x.shape
+    
+    d_out_flat = d_out.reshape(B * T, -1)
+    x_flat = x.reshape(B * T, -1)
+    h1_flat = h1.reshape(B * T, -1)
+    a1_flat = a1.reshape(B * T, -1)
+    
+    cache_2 = {'x': a1_flat, 'w': w2}
+    cache_1 = {'x': x_flat, 'w': w1}
+    cache_relu = {'x': h1_flat}
+    
+    def try_call(func, dout, array_arg, dict_arg):
+        try:
+            return func(dout, dict_arg)
+        except Exception:
+            return func(dout, array_arg)
+            
+    da1_flat = try_call(linear_backward_dx, d_out_flat, w2, cache_2)
+    dw2 = try_call(linear_backward_dw, d_out_flat, a1_flat, cache_2)
+    try:
+        db2 = bias_add_backward_db(d_out_flat)
+    except Exception:
+        db2 = bias_add_backward_db(d_out_flat, cache_2)
+        
+    dh1_flat = try_call(relu_backward, da1_flat, h1_flat, cache_relu)
+    dx_flat = try_call(linear_backward_dx, dh1_flat, w1, cache_1)
+    dw1 = try_call(linear_backward_dw, dh1_flat, x_flat, cache_1)
+    try:
+        db1 = bias_add_backward_db(dh1_flat)
+    except Exception:
+        db1 = bias_add_backward_db(dh1_flat, cache_1)
+        
+    dx = dx_flat.reshape(x.shape)
+    
+    return {
+        'dx': dx,
+        'dw1': dw1,
+        'db1': db1,
+        'dw2': dw2,
+        'db2': db2
+    }
 
 # Step 135 - residual_forward (not yet solved)
 # TODO: implement
