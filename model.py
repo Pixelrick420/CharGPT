@@ -1513,11 +1513,13 @@ def forward_to_get_logits(params, ctx):
 def take_last_position_logits(logits):
     return logits[:, -1, :]
 
-# Step 160 - apply_temperature (not yet solved)
-# TODO: implement
+# Step 160 - apply_temperature
+def apply_temperature(logits, temperature):
+    return logits / temperature
 
-# Step 161 - top_k_filter (not yet solved)
-# TODO: implement
+# Step 161 - top_k_filter
+def apply_temperature(logits, temperature):
+    return logits / temperature
 
 # Step 162 - softmax_to_probs (not yet solved)
 # TODO: implement
