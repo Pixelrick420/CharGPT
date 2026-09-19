@@ -1557,6 +1557,7 @@ def generation_loop_for_n_steps(params, prompt_ids, n_new_tokens, block_size, te
         ctx = append_token_to_sequence(ctx, next_token)
     return ctx
 
-# Step 166 - decode_final_sequence (not yet solved)
-# TODO: implement
+# Step 166 - decode_final_sequence
+def decode_final_sequence(generated_ids, itos):
+    return decode_ids(generated_ids[0], itos)
 
