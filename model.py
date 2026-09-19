@@ -1504,8 +1504,10 @@ def crop_context_to_block_size(ctx, block_size):
         return ctx[:, -block_size:]
     return ctx
 
-# Step 158 - forward_to_get_logits (not yet solved)
-# TODO: implement
+# Step 158 - forward_to_get_logits
+def forward_to_get_logits(params, ctx):
+    logits, _ = full_model_forward(ctx, params)
+    return logits
 
 # Step 159 - take_last_position_logits (not yet solved)
 # TODO: implement
