@@ -1538,8 +1538,10 @@ def softmax_to_probs(logits):
 def sample_one_token(probs, rng):
     return int(rng.choice(probs.shape[-1], p=probs[0]))
 
-# Step 164 - append_token_to_sequence (not yet solved)
-# TODO: implement
+# Step 164 - append_token_to_sequence
+def append_token_to_sequence(ctx, token_id):
+    new_token_arr = np.array([[token_id]], dtype=ctx.dtype)
+    return np.concatenate((ctx, new_token_arr), axis=1)
 
 # Step 165 - generation_loop_for_n_steps (not yet solved)
 # TODO: implement
