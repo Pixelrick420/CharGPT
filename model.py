@@ -1534,8 +1534,9 @@ def softmax_to_probs(logits):
     exp_logits = np.exp(shifted_logits)
     return exp_logits / np.sum(exp_logits, axis=-1, keepdims=True)
 
-# Step 163 - sample_one_token (not yet solved)
-# TODO: implement
+# Step 163 - sample_one_token
+def sample_one_token(probs, rng):
+    return int(rng.choice(probs.shape[-1], p=probs[0]))
 
 # Step 164 - append_token_to_sequence (not yet solved)
 # TODO: implement
