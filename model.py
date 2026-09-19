@@ -1408,8 +1408,66 @@ def adam_bias_correction(m, v, beta1, beta2, t):
 def adam_parameter_update(param, m_hat, v_hat, lr, eps):
     return param - lr * m_hat / (np.sqrt(v_hat) + eps)
 
-# Step 154 - wire_full_training_loop (not yet solved)
-# TODO: implement
+# Step 154 - wire_full_training_loop
+def wire_full_training_loop(params, train_ids, val_ids, block_size, batch_size, n_steps, lr, betas, eps):
+    rng = np.random.default_rng()
+    t = initialize_adam_step_counter()
+    m, v = initialize_adam_moments(params)
+    beta1, beta2 = betas
+    
+    history = []
+    
+    def update_tree(p_node, g_node, m_node, v_node, current_t):
+        if isinstance(p_node, dict):
+            new_p, new_m, new_v = {}, {}, {}
+            for k in p_node:
+                new_p[k], new_m[k], new_v[k] = update_tree(
+                    p_node[k], g_node[k], m_node[k], v_node[k], current_t
+                )
+            return new_p, new_m, new_v
+        elif isinstance(p_node, list):
+            new_p, new_m, new_v = [], [], []
+            for i in range(len(p_node)):
+                res_p, res_m, res_v = update_tree(
+                    p_node[i], g_node[i], m_node[i], v_node[i], current_t
+                )
+                new_p.append(res_p)
+                new_m.append(res_m)
+                new_v.append(res_v)
+            return new_p, new_m, new_v
+        elif isinstance(p_node, np.ndarray):
+            new_m_leaf = adam_update_first_moment(m_node, g_node, beta1)
+            new_v_leaf = adam_update_second_moment(v_node, g_node, beta2)
+            m_hat, v_hat = adam_bias_correction(new_m_leaf, new_v_leaf, beta1, beta2, current_t)
+            new_p_leaf = adam_parameter_update(p_node, m_hat, v_hat, lr, eps)
+            return new_p_leaf, new_m_leaf, new_v_leaf
+        return p_node, m_node, v_node
+
+    for step in range(n_steps):
+        X, Y = get_batch(train_ids, block_size, batch_size, rng)
+        
+        logits, caches = full_model_forward(X, params)
+        B, T, V = logits.shape
+        N = B * T
+        
+        max_logits = np.max(logits, axis=-1, keepdims=True)
+        exp_logits = np.exp(logits - max_logits)
+        probs = exp_logits / np.sum(exp_logits, axis=-1, keepdims=True)
+        
+        Y_onehot = np.eye(V)[Y]
+        
+        loss = -np.sum(Y_onehot * np.log(probs + 1e-12)) / N
+        
+        d_logits = (probs - Y_onehot) / N
+        
+        grads = full_model_backward(d_logits, caches, params)
+        
+        t = adam_increment_step(t)
+        params, m, v = update_tree(params, grads, m, v, t)
+        
+        history.append({'step': step, 'train_loss': loss})
+        
+    return params, history
 
 # Step 155 - logging_and_validation_loss (not yet solved)
 # TODO: implement
