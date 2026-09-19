@@ -1364,8 +1364,23 @@ def full_model_backward(d_logits, caches, model_params):
         }
     }
 
-# Step 147 - initialize_adam_moments (not yet solved)
-# TODO: implement
+# Step 147 - initialize_adam_moments
+import numpy as np
+
+def initialize_adam_moments(model_params):
+    def build_zeros(params):
+        if isinstance(params, dict):
+            return {k: build_zeros(v) for k, v in params.items()}
+        elif isinstance(params, list):
+            return [build_zeros(v) for v in params]
+        elif isinstance(params, np.ndarray):
+            return np.zeros_like(params)
+        return params
+
+    m = build_zeros(model_params)
+    v = build_zeros(model_params)
+    
+    return m, v
 
 # Step 148 - initialize_adam_step_counter (not yet solved)
 # TODO: implement
