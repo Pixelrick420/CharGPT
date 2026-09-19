@@ -1518,8 +1518,14 @@ def apply_temperature(logits, temperature):
     return logits / temperature
 
 # Step 161 - top_k_filter
-def apply_temperature(logits, temperature):
-    return logits / temperature
+def top_k_filter(logits, k):
+    out = logits.copy()
+    if k >= out.shape[-1]:
+        return out
+    
+    threshold = np.partition(out, -k, axis=-1)[:, -k, np.newaxis]
+    out[out < threshold] = -np.inf
+    return out
 
 # Step 162 - softmax_to_probs (not yet solved)
 # TODO: implement
