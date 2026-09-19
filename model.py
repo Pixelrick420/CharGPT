@@ -1509,8 +1509,9 @@ def forward_to_get_logits(params, ctx):
     logits, _ = full_model_forward(ctx, params)
     return logits
 
-# Step 159 - take_last_position_logits (not yet solved)
-# TODO: implement
+# Step 159 - take_last_position_logits
+def take_last_position_logits(logits):
+    return logits[:, -1, :]
 
 # Step 160 - apply_temperature (not yet solved)
 # TODO: implement
