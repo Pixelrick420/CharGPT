@@ -1,48 +1,58 @@
-"""
-Tiny GPT From Scratch scaffold.
+"""Tiny GPT from scratch: download real data, train, and generate."""
 
-Run this with: python scaffold.py
-Uses functions defined in model.py.
-"""
-
-from model import *  # noqa: F401, F403 (pulls in your solution functions)
-
-"""Tiny GPT from scratch in NumPy: end-to-end scaffold demo."""
+import os
+import urllib.request
 
 import numpy as np
 
-from solution import *
+from model import (
+    build_maps,
+    build_vocab,
+    create_positional_embedding,
+    create_token_embedding,
+    decode,
+    encode,
+    encode_corpus,
+    generate,
+    split_train_val,
+    stack_blocks,
+    train,
+    validation_loss,
+)
+
+D_MODEL = 16
+N_HEADS = 2
+D_FF = 32
+N_LAYERS = 2
+BLOCK_SIZE = 32
+BATCH_SIZE = 16
+N_STEPS = 6000
+LR = 3e-4
+
+CORPUS_URL = "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
+DATA_PATH = "data/tinyshakespeare.txt"
 
 
-TOY_CORPUS = (
-    "hello world\nthe quick brown fox jumps over the lazy dog\n"
-    "tiny gpt learns characters one step at a time\n"
-) * 20
+def fetch_corpus(path=DATA_PATH, url=CORPUS_URL):
+    if os.path.exists(path):
+        print(f"[data] cached at {path}")
+        return open(path, encoding="utf-8").read()
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    print(f"[data] downloading {url}")
+    urllib.request.urlretrieve(url, path)
+    return open(path, encoding="utf-8").read()
 
 
-def build_model(vocab_size, block_size, d_model=16, n_heads=2, d_ff=32, n_layers=2):
-    tok_emb = create_token_embedding(vocab_size, d_model)
-    pos_emb = create_positional_embedding(block_size, d_model)
-    blocks = stack_transformer_blocks(n_layers, d_model, n_heads, d_ff)
-    # Bridge block contract: transformer_block_forward expects attn['n_heads']
-    # and lowercase ffn keys (w1/b1/w2/b2), but stack_transformer_blocks emits
-    # uppercase W1/W2 and no n_heads. Patch here without touching the step.
-    for blk in blocks:
-        blk['attn']['n_heads'] = n_heads
-        ffn = blk['ffn']
-        blk['ffn'] = {
-            'w1': ffn['W1'], 'b1': ffn['b1'],
-            'w2': ffn['W2'], 'b2': ffn['b2'],
-        }
-    final_ln_gamma = np.ones((d_model,))
-    final_ln_beta = np.zeros((d_model,))
-    lm_w = np.random.randn(d_model, vocab_size) * 0.02
-    lm_b = np.zeros((vocab_size,))
+def build_model(vocab_size, block_size):
     return {
-        "tok_emb": tok_emb, "pos_emb": pos_emb, "blocks": blocks,
-        "ln_f": {"gamma": final_ln_gamma, "beta": final_ln_beta},
-        "lm_head": {"w_lm": lm_w, "b_lm": lm_b},
-        "block_size": block_size, "vocab_size": vocab_size,
+        "tok_emb": create_token_embedding(vocab_size, D_MODEL),
+        "pos_emb": create_positional_embedding(block_size, D_MODEL),
+        "blocks": stack_blocks(N_LAYERS, D_MODEL, N_HEADS, D_FF),
+        "ln_f": {"gamma": np.ones(D_MODEL), "beta": np.zeros(D_MODEL)},
+        "lm_head": {
+            "w_lm": np.random.randn(D_MODEL, vocab_size) * 0.02,
+            "b_lm": np.zeros(vocab_size),
+        },
     }
 
 
@@ -50,41 +60,24 @@ if __name__ == "__main__":
     np.random.seed(0)
     rng = np.random.default_rng(0)
 
-    # 1) Tokenizer + corpus prep
-    text = read_text_file(TOY_CORPUS)
+    text = fetch_corpus()
     vocab = build_vocab(text)
-    stoi = build_stoi(vocab)
-    itos = build_itos(vocab)
-    vocab_size = len(vocab)
-    print(f"vocab_size={vocab_size}, vocab[:10]={vocab[:10]}")
+    stoi, itos = build_maps(vocab)
+    data = encode_corpus(text, stoi)
+    train_ids, val_ids = split_train_val(data, 0.9)
+    print(f"vocab_size={len(vocab)} train={len(train_ids):,} val={len(val_ids):,}")
 
-    data = encode_corpus_to_int_array(text, stoi)
-    split_idx = pick_split_point(len(data), 0.9)
-    train_ids, val_ids = slice_train_and_val(data, split_idx)
-    print(f"train={len(train_ids)} val={len(val_ids)}")
+    model = build_model(len(vocab), BLOCK_SIZE)
+    before = validation_loss(model, val_ids, BLOCK_SIZE, 4, 2)
+    print(f"val_loss before training ~ {before:.4f}")
 
-    # 2) Batch sanity check
-    block_size = pick_block_size(8)
-    xb, yb = get_batch(train_ids, block_size, batch_size=4, rng=rng)
-    print(f"batch X shape={xb.shape} Y shape={yb.shape}")
+    train(model, train_ids, BLOCK_SIZE,
+          batch_size=BATCH_SIZE, lr=LR, n_steps=N_STEPS, log_every=250, rng=rng)
+    after = validation_loss(model, val_ids, BLOCK_SIZE, 4, 2)
+    print(f"val_loss after training  ~ {after:.4f}")
 
-    # 3) Build the GPT model
-    params = build_model(vocab_size, block_size, d_model=16, n_heads=2, d_ff=32, n_layers=2)
-
-    # 4) Training step skipped: wire_full_training_loop depends on
-    #    full_model_backward, which isn't provided in the assembled solution.
-    #    The import remains available for discoverability; we just don't call
-    #    it on the critical path. The remaining demo (validation loss +
-    #    generation) only needs forward inference and exercises every other
-    #    helper end-to-end.
-
-    val_loss = logging_and_validation_loss(params, val_ids, block_size, batch_size=4, n_eval_batches=2)
-    print(f"val_loss ~ {val_loss:.4f}")
-
-    # 5) Generate text from a prompt
-    prompt_ids = encode_prompt("hello", stoi)
-    generated = generation_loop_for_n_steps(
-        params, prompt_ids, n_new_tokens=40,
-        block_size=block_size, temperature=1.0, top_k=5, rng=rng,
-    )
-    print("generated:", repr(decode_final_sequence(generated, itos)))
+    prompt = np.array([encode("ROMEO:", stoi)])
+    generated = generate(model, prompt, 300, BLOCK_SIZE,
+                         temperature=0.8, top_k=50, rng=rng)
+    print("\n----- generated -----")
+    print(decode(generated[0], itos))
