@@ -1498,8 +1498,11 @@ def logging_and_validation_loss(params, val_ids, block_size, batch_size, n_eval_
 def encode_prompt(prompt, stoi):
     return np.array([encode_string(prompt, stoi)])
 
-# Step 157 - crop_context_to_block_size (not yet solved)
-# TODO: implement
+# Step 157 - crop_context_to_block_size
+def crop_context_to_block_size(ctx, block_size):
+    if ctx.shape[1] > block_size:
+        return ctx[:, -block_size:]
+    return ctx
 
 # Step 158 - forward_to_get_logits (not yet solved)
 # TODO: implement
