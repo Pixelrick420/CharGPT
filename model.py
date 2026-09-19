@@ -1527,8 +1527,12 @@ def top_k_filter(logits, k):
     out[out < threshold] = -np.inf
     return out
 
-# Step 162 - softmax_to_probs (not yet solved)
-# TODO: implement
+# Step 162 - softmax_to_probs
+def softmax_to_probs(logits):
+    max_logits = np.max(logits, axis=-1, keepdims=True)
+    shifted_logits = logits - max_logits
+    exp_logits = np.exp(shifted_logits)
+    return exp_logits / np.sum(exp_logits, axis=-1, keepdims=True)
 
 # Step 163 - sample_one_token (not yet solved)
 # TODO: implement
