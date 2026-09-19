@@ -1543,8 +1543,19 @@ def append_token_to_sequence(ctx, token_id):
     new_token_arr = np.array([[token_id]], dtype=ctx.dtype)
     return np.concatenate((ctx, new_token_arr), axis=1)
 
-# Step 165 - generation_loop_for_n_steps (not yet solved)
-# TODO: implement
+# Step 165 - generation_loop_for_n_steps
+def generation_loop_for_n_steps(params, prompt_ids, n_new_tokens, block_size, temperature, k, rng):
+    ctx = prompt_ids
+    for _ in range(n_new_tokens):
+        cropped_ctx = crop_context_to_block_size(ctx, block_size)
+        logits = forward_to_get_logits(params, cropped_ctx)
+        last_logits = take_last_position_logits(logits)
+        tempered_logits = apply_temperature(last_logits, temperature)
+        filtered_logits = top_k_filter(tempered_logits, k)
+        probs = softmax_to_probs(filtered_logits)
+        next_token = sample_one_token(probs, rng)
+        ctx = append_token_to_sequence(ctx, next_token)
+    return ctx
 
 # Step 166 - decode_final_sequence (not yet solved)
 # TODO: implement
