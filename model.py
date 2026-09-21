@@ -524,7 +524,7 @@ def validation_loss(model, val_ids, block_size, batch_size=4, n_eval_batches=2):
     return total / n_eval_batches
 
 
-def generate(model, prompt, n_new_tokens, block_size, temperature=1.0, top_k=0, rng=None):
+def generate(model, prompt, n_new_tokens, block_size, temperature=1.0, top_k=0, top_p=0.0, rng=None):
     rng = rng or np.random.default_rng()
     ctx = prompt
     for _ in range(n_new_tokens):
@@ -533,6 +533,16 @@ def generate(model, prompt, n_new_tokens, block_size, temperature=1.0, top_k=0, 
             top_k = min(top_k, logits.shape[-1])
             threshold = np.partition(logits, -top_k, axis=-1)[:, -top_k, np.newaxis]
             logits = np.where(logits >= threshold, logits, -np.inf)
+        if top_p > 0.0:
+            probs_sorted = np.sort(softmax(logits), axis=-1)[:, ::-1]
+            cumprobs = np.cumsum(probs_sorted, axis=-1)
+            # Keep the smallest set of tokens whose cumulative probability
+            # reaches top_p, demanding at least one token survives.
+            limits = np.maximum(np.argmax(cumprobs >= top_p, axis=-1), 0) + 1
+            mask = np.zeros_like(logits, dtype=bool)
+            for i, n in enumerate(limits):
+                mask[i, :n] = True
+            logits = np.where(mask, logits, -np.inf)
         probs = softmax(logits)
         token = int(rng.choice(probs.shape[-1], p=probs[0]))
         ctx = np.concatenate([ctx, np.array([[token]], dtype=ctx.dtype)], axis=1)
